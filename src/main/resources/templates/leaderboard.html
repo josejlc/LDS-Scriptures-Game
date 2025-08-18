@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Puntuaciones - Dominio de Doctrina</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/game.css}" rel="stylesheet">
+</head>
+<body class="bg-gradient">
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg game-card">
+                <div class="card-header bg-warning text-dark text-center">
+                    <h3>🏆 Tabla de Puntuaciones</h3>
+                    <p class="mb-0">Top 10 Mejores Jugadores</p>
+                </div>
+                <div class="card-body p-4">
+
+                    <div th:if="${#lists.isEmpty(topScores)}" class="text-center py-5">
+                        <div class="display-4 text-muted mb-3">📋</div>
+                        <h4 class="text-muted">No hay puntuaciones registradas</h4>
+                        <p class="text-secondary">¡Sé el primero en jugar!</p>
+                        <a th:href="@{/game/start}" class="btn btn-primary">
+                            🎮 Comenzar Juego
+                        </a>
+                    </div>
+
+                    <div th:unless="${#lists.isEmpty(topScores)}" class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                            <tr>
+                                <th>Pos.</th>
+                                <th>🏅 Jugador</th>
+                                <th>⭐ Puntos</th>
+                                <th>📊 Nivel</th>
+                                <th>🔥 Mejor Racha</th>
+                                <th>🎯 Precisión</th>
+                                <th>📅 Fecha</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="session, iterStat : ${topScores}"
+                                th:class="${iterStat.index == 0} ? 'table-warning' : (${iterStat.index == 1} ? 'table-secondary' : (${iterStat.index == 2} ? 'table-info' : ''))">
+                                <td>
+                                    <span th:if="${iterStat.index == 0}" class="badge bg-warning text-dark fs-6">🥇</span>
+                                    <span th:if="${iterStat.index == 1}" class="badge bg-secondary fs-6">🥈</span>
+                                    <span th:if="${iterStat.index == 2}" class="badge bg-info fs-6">🥉</span>
+                                    <span th:unless="${iterStat.index < 3}" th:text="${iterStat.index + 1}"></span>
+                                </td>
+                                <td>
+                                    <strong th:text="${session.playerName}">Jugador</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success fs-6" th:text="${session.score}">0</span>
+                                </td>
+                                <td th:text="${session.levelReached}">1</td>
+                                <td th:text="${session.bestStreak}">0</td>
+                                <td>
+                                    <span th:text="${#numbers.formatDecimal(session.accuracyPercentage, 1, 1)} + '%'">0%</span>
+                                </td>
+                                <td>
+                                    <small th:text="${#temporals.format(session.sessionStart, 'dd/MM/yyyy HH:mm')}">
+                                        Fecha
+                                    </small>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="text-muted">🎯 Puntuación Promedio</h6>
+                                    <h4 class="text-primary" th:text="${topScores.isEmpty() ? '0' : #numbers.formatDecimal(topScores.stream().mapToInt(s -> s.score).average().orElse(0), 1, 0)}">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="text-muted">👑 Mejor Puntuación</h6>
+                                    <h4 class="text-warning" th:text="${topScores.isEmpty() ? '0' : topScores[0].score}">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a th:href="@{/game/start}" class="btn btn-primary btn-lg">
+                            🎮 Jugar Ahora
+                        </a>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a th:href="@{/history}" class="btn btn-info w-100">
+                                    📊 Ver Historial
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a th:href="@{/}" class="btn btn-outline-secondary w-100">
+                                    🏠 Inicio
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/game.js}"></script>
+</body>
+</html>

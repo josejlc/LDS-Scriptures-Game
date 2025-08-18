@@ -1,0 +1,67 @@
+:root {
+    --primary-color: #3498db;
+    --success-color: #27ae60;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+    --info-color: #17a2b8;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.bg-gradient {
+    /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;*/ /* ----> Antes <---- */
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: #f8f9fa; /*Actualizado*/
+}
+
+.game-card {
+    /*border: none;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);*/ /* ----> Antes <---- */
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.9); /* blanco translúcido */ /*Actualizado*/
+}
+
+.option-btn {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+}
+
+.option-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card {
+    padding: 1rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.scripture-display {
+    background: rgba(0, 123, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.question-text {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 1.5rem;
+    border-radius: 10px;
+    white-space: pre-line;
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 1rem;
+    }
+
+    .card-body {
+        padding: 1.5rem !important;
+    }
+}

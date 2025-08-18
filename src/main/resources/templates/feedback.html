@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado - Dominio de Doctrina</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/game.css}" rel="stylesheet">
+</head>
+<body class="bg-gradient">
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg game-card">
+                <div class="card-body text-center p-5">
+                    <!-- Resultado -->
+                    <div th:if="${isCorrect}" class="mb-4">
+                        <div class="display-1 text-success mb-3">✓</div>
+                        <h2 class="text-success">¡CORRECTO!</h2>
+                        <p class="text-muted">Ganaste puntos por tu respuesta</p>
+                    </div>
+
+                    <div th:unless="${isCorrect}" class="mb-4">
+                        <div class="display-1 text-danger mb-3">✗</div>
+                        <h2 class="text-danger">Incorrecto</h2>
+                        <p class="text-muted">La respuesta correcta era:</p>
+                        <div class="alert alert-info">
+                            <strong th:text="${correctAnswer}">Respuesta correcta</strong>
+                        </div>
+                    </div>
+
+                    <!-- Versículo completo -->
+                    <div class="scripture-display mb-4" th:if="${verse}">
+                        <h5>📖 Versículo completo:</h5>
+                        <blockquote class="blockquote">
+                            <p th:text="${verse.text}">Texto del versículo</p>
+                            <footer class="blockquote-footer">
+                                <cite th:text="${verse.reference + ' (' + verse.book.name + ')'}">Referencia</cite>
+                            </footer>
+                        </blockquote>
+                    </div>
+
+                    <!-- Estadísticas actuales -->
+                    <div class="row mb-4">
+                        <div class="col-3">
+                            <h6 class="text-muted">Puntos</h6>
+                            <h4 class="text-success" th:text="${gameSession.score}">0</h4>
+                        </div>
+                        <div class="col-3">
+                            <h6 class="text-muted">Nivel</h6>
+                            <h4 class="text-primary" th:text="${gameSession.levelReached}">1</h4>
+                        </div>
+                        <div class="col-3">
+                            <h6 class="text-muted">Vidas</h6>
+                            <h4 class="text-danger" th:text="${gameSession.livesRemaining}">3</h4>
+                        </div>
+                        <div class="col-3">
+                            <h6 class="text-muted">Racha</h6>
+                            <h4 class="text-warning" th:text="${gameSession.currentStreak}">0</h4>
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="d-grid gap-2" th:if="${gameSession.livesRemaining > 0}">
+                        <form th:action="@{/game/continue}" method="post">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                ➡️ Siguiente Pregunta
+                            </button>
+                        </form>
+                        <a th:href="@{/game/results}" class="btn btn-outline-secondary">
+                            🏁 Terminar Juego
+                        </a>
+                    </div>
+
+                    <div class="d-grid" th:unless="${gameSession.livesRemaining > 0}">
+                        <a th:href="@{/game/results}" class="btn btn-danger btn-lg">
+                            💀 Game Over - Ver Resultados
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/game.js}"></script>
+</body>
+</html>

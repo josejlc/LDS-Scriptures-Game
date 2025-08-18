@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregunta - Dominio de Doctrina</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/game.css}" rel="stylesheet">
+</head>
+<body class="bg-gradient">
+<div class="container-fluid py-4">
+    <!-- Stats Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col">
+                            <h6 class="text-muted mb-1">Nivel</h6>
+                            <h4 class="text-primary" th:text="${gameSession.levelReached}">1</h4>
+                        </div>
+                        <div class="col">
+                            <h6 class="text-muted mb-1">Puntos</h6>
+                            <h4 class="text-success" th:text="${gameSession.score}">0</h4>
+                        </div>
+                        <div class="col">
+                            <h6 class="text-muted mb-1">Vidas</h6>
+                            <h4 class="text-danger" th:text="${gameSession.livesRemaining}">3</h4>
+                        </div>
+                        <div class="col">
+                            <h6 class="text-muted mb-1">Racha</h6>
+                            <h4 class="text-warning" th:text="${gameSession.currentStreak}">0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question -->
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg game-card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0" th:text="${question.gameMode}">Modo de Juego</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="question-text mb-4">
+                        <p class="lead" th:utext="${question.questionText}">Pregunta aquí</p>
+                    </div>
+
+                    <form th:action="@{/game/answer}" method="post">
+                        <div class="d-grid gap-3">
+                            <button type="submit" name="selectedAnswer" th:value="${question.optionA}"
+                                    class="btn btn-outline-primary btn-lg text-start option-btn">
+                                <strong>A.</strong> <span th:text="${question.optionA}">Opción A</span>
+                            </button>
+                            <button type="submit" name="selectedAnswer" th:value="${question.optionB}"
+                                    class="btn btn-outline-primary btn-lg text-start option-btn">
+                                <strong>B.</strong> <span th:text="${question.optionB}">Opción B</span>
+                            </button>
+                            <button type="submit" name="selectedAnswer" th:value="${question.optionC}"
+                                    class="btn btn-outline-primary btn-lg text-start option-btn">
+                                <strong>C.</strong> <span th:text="${question.optionC}">Opción C</span>
+                            </button>
+                            <button type="submit" name="selectedAnswer" th:value="${question.optionD}"
+                                    class="btn btn-outline-primary btn-lg text-start option-btn">
+                                <strong>D.</strong> <span th:text="${question.optionD}">Opción D</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/game.js}"></script>
+</body>
+</html>
