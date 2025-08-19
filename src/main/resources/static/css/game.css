@@ -1,67 +1,135 @@
-:root {
-    --primary-color: #3498db;
-    --success-color: #27ae60;
-    --danger-color: #e74c3c;
-    --warning-color: #f39c12;
-    --info-color: #17a2b8;
-}
-
+/* Estilos generales */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 
-.bg-gradient {
-    /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;*/ /* ----> Antes <---- */
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-        color: #f8f9fa; /*Actualizado*/
+.container {
+    background-color: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
 }
 
-.game-card {
-    /*border: none;
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.95);*/ /* ----> Antes <---- */
-    border-radius: 1rem;
-    background-color: rgba(255, 255, 255, 0.9); /* blanco translúcido */ /*Actualizado*/
+header h1 {
+    color: #004d99;
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
 }
 
-.option-btn {
+/* Estilos de formulario */
+.form-group {
+    margin-bottom: 1.5em;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
+}
+
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Botones de selección de libro */
+.book-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.book-button {
+    background-color: #e6f2ff;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
     transition: all 0.3s ease;
-    border-radius: 10px;
+    font-weight: bold;
+    color: #004d99;
+    user-select: none;
 }
 
-.option-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+input[type="radio"] {
+    display: none;
 }
 
-.stat-card {
-    padding: 1rem;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1);
+input[type="radio"]:checked + .book-button {
+    background-color: #004d99;
+    color: #fff;
+    border-color: #002e66;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.scripture-display {
-    background: rgba(0, 123, 255, 0.1);
-    padding: 1.5rem;
-    border-radius: 10px;
-    border-left: 4px solid var(--primary-color);
+/* Botón de inicio */
+.button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.question-text {
-    background: rgba(255, 255, 255, 0.8);
-    padding: 1.5rem;
-    border-radius: 10px;
-    white-space: pre-line;
+.start-button {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
 }
 
-@media (max-width: 768px) {
-    .container-fluid {
-        padding: 1rem;
-    }
+.start-button:hover {
+    background-color: #0056b3;
+}
 
-    .card-body {
-        padding: 1.5rem !important;
-    }
+/* Estilos adicionales para la página de juego */
+
+/* Tarjeta del juego */
+.game-card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Opciones de respuesta */
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Feedback de respuesta (correcto/incorrecto) */
+.text-success {
+    color: #28a745 !important;
+    font-size: 1.2em;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+    font-size: 1.2em;
+}
+
+/* Estilos para la página de resultados */
+.text-success.font-weight-bold {
+    font-weight: bold;
 }

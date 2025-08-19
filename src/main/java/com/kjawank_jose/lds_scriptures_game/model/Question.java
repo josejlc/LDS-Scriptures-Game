@@ -1,90 +1,75 @@
 package com.kjawank_jose.lds_scriptures_game.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
-@Table(name = "questions")
 public class Question {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "verse_id", nullable = false)
-    private Verse verse;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
+    // Variables que tu servicio necesita
     private String questionText;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String correctAnswer;
+    private String incorrectAnswer; // La variable debe ser en singular
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String optionA;
+    // Constructores
+    public Question() {
+    }
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String optionB;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String optionC;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String optionD;
-
-    @Column(nullable = false)
-    private String gameMode;
-
-    private Integer difficultyPoints = 10;
-
-    // Constructors
-    public Question() {}
-
-    public Question(Verse verse, String questionText, String correctAnswer,
-                    String optionA, String optionB, String optionC, String optionD,
-                    String gameMode, Integer difficultyPoints) {
-        this.verse = verse;
+    public Question(String questionText, String correctAnswer, String incorrectAnswer) {
         this.questionText = questionText;
         this.correctAnswer = correctAnswer;
-        this.optionA = optionA;
-        this.optionB = optionB;
-        this.optionC = optionC;
-        this.optionD = optionD;
-        this.gameMode = gameMode;
-        this.difficultyPoints = difficultyPoints;
+        this.incorrectAnswer = incorrectAnswer;
     }
 
-    public boolean isCorrectAnswer(String answer) {
-        return correctAnswer.equals(answer);
+    public Long getId() {
+        return id;
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Verse getVerse() { return verse; }
-    public void setVerse(Verse verse) { this.verse = verse; }
+    public String getQuestionText() {
+        return questionText;
+    }
 
-    public String getQuestionText() { return questionText; }
-    public void setQuestionText(String questionText) { this.questionText = questionText; }
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
+    }
 
-    public String getCorrectAnswer() { return correctAnswer; }
-    public void setCorrectAnswer(String correctAnswer) { this.correctAnswer = correctAnswer; }
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
 
-    public String getOptionA() { return optionA; }
-    public void setOptionA(String optionA) { this.optionA = optionA; }
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
 
-    public String getOptionB() { return optionB; }
-    public void setOptionB(String optionB) { this.optionB = optionB; }
+    public String getIncorrectAnswer() {
+        return incorrectAnswer;
+    }
 
-    public String getOptionC() { return optionC; }
-    public void setOptionC(String optionC) { this.optionC = optionC; }
+    public void setIncorrectAnswer(String incorrectAnswer) {
+        this.incorrectAnswer = incorrectAnswer;
+    }
 
-    public String getOptionD() { return optionD; }
-    public void setOptionD(String optionD) { this.optionD = optionD; }
-
-    public String getGameMode() { return gameMode; }
-    public void setGameMode(String gameMode) { this.gameMode = gameMode; }
-
-    public Integer getDifficultyPoints() { return difficultyPoints; }
-    public void setDifficultyPoints(Integer difficultyPoints) { this.difficultyPoints = difficultyPoints; }
+    // Método para obtener las opciones en orden aleatorio
+    @Transient // Esto no se guardará en la base de datos
+    public List<String> getOptions() {
+        List<String> options = new ArrayList<>();
+        options.add(correctAnswer);
+        options.add(incorrectAnswer);
+        Collections.shuffle(options);
+        return options;
+    }
 }

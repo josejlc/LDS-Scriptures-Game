@@ -1,5 +1,6 @@
 package com.kjawank_jose.lds_scriptures_game.model;
 
+import com.kjawank_jose.lds_scriptures_game.enums.ScriptureBookType;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -12,81 +13,129 @@ public class GameSession {
 
     private String playerName;
     private Integer score = 0;
-    private Integer levelReached = 1;
-    private Integer livesRemaining = 3;
-    private Integer currentStreak = 0;
-    private Integer bestStreak = 0;
     private Integer correctAnswers = 0;
     private Integer incorrectAnswers = 0;
+    private Integer currentStreak = 0;
+    private Integer longestStreak = 0;
     private LocalDateTime sessionStart = LocalDateTime.now();
     private LocalDateTime sessionEnd;
     private Boolean isActive = true;
 
-    // Constructors
-    public GameSession() {}
+    @Enumerated(EnumType.STRING)
+    private ScriptureBookType bookType;
 
-    public GameSession(String playerName) {
-        this.playerName = playerName;
-    }
-
-    // Business methods
+    // Métodos de negocio
     public void correctAnswer(int points) {
         this.score += points;
-        this.currentStreak++;
-        this.levelReached++;
         this.correctAnswers++;
-        this.bestStreak = Math.max(this.currentStreak, this.bestStreak);
+        this.currentStreak++;
+        if (this.currentStreak > this.longestStreak) {
+            this.longestStreak = this.currentStreak;
+        }
     }
 
     public void incorrectAnswer() {
-        this.livesRemaining--;
-        this.currentStreak = 0;
         this.incorrectAnswers++;
+        this.currentStreak = 0;
     }
 
     public boolean isGameOver() {
-        return livesRemaining <= 0;
+        // Podrías basar esto en el número de preguntas si hay un límite
+        // O en una variable como vidas, si la implementas.
+        return false; // Este método debe implementarse con la lógica del juego.
     }
 
-    public double getAccuracyPercentage() {
-        int total = correctAnswers + incorrectAnswers;
-        return total > 0 ? (double) correctAnswers / total * 100 : 0;
+    public void endGame() {
+        this.isActive = false;
+        this.sessionEnd = LocalDateTime.now();
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters y Setters
+    public Long getId() {
+        return id;
+    }
 
-    public String getPlayerName() { return playerName; }
-    public void setPlayerName(String playerName) { this.playerName = playerName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Integer getScore() { return score; }
-    public void setScore(Integer score) { this.score = score; }
+    public String getPlayerName() {
+        return playerName;
+    }
 
-    public Integer getLevelReached() { return levelReached; }
-    public void setLevelReached(Integer levelReached) { this.levelReached = levelReached; }
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
 
-    public Integer getLivesRemaining() { return livesRemaining; }
-    public void setLivesRemaining(Integer livesRemaining) { this.livesRemaining = livesRemaining; }
+    public Integer getScore() {
+        return score;
+    }
 
-    public Integer getCurrentStreak() { return currentStreak; }
-    public void setCurrentStreak(Integer currentStreak) { this.currentStreak = currentStreak; }
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
-    public Integer getBestStreak() { return bestStreak; }
-    public void setBestStreak(Integer bestStreak) { this.bestStreak = bestStreak; }
+    public Integer getCorrectAnswers() {
+        return correctAnswers;
+    }
 
-    public Integer getCorrectAnswers() { return correctAnswers; }
-    public void setCorrectAnswers(Integer correctAnswers) { this.correctAnswers = correctAnswers; }
+    public void setCorrectAnswers(Integer correctAnswers) {
+        this.correctAnswers = correctAnswers;
+    }
 
-    public Integer getIncorrectAnswers() { return incorrectAnswers; }
-    public void setIncorrectAnswers(Integer incorrectAnswers) { this.incorrectAnswers = incorrectAnswers; }
+    public Integer getIncorrectAnswers() {
+        return incorrectAnswers;
+    }
 
-    public LocalDateTime getSessionStart() { return sessionStart; }
-    public void setSessionStart(LocalDateTime sessionStart) { this.sessionStart = sessionStart; }
+    public void setIncorrectAnswers(Integer incorrectAnswers) {
+        this.incorrectAnswers = incorrectAnswers;
+    }
 
-    public LocalDateTime getSessionEnd() { return sessionEnd; }
-    public void setSessionEnd(LocalDateTime sessionEnd) { this.sessionEnd = sessionEnd; }
+    public Integer getCurrentStreak() {
+        return currentStreak;
+    }
 
-    public Boolean getIsActive() { return isActive; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public void setCurrentStreak(Integer currentStreak) {
+        this.currentStreak = currentStreak;
+    }
+
+    public Integer getLongestStreak() {
+        return longestStreak;
+    }
+
+    public void setLongestStreak(Integer longestStreak) {
+        this.longestStreak = longestStreak;
+    }
+
+    public LocalDateTime getSessionStart() {
+        return sessionStart;
+    }
+
+    public void setSessionStart(LocalDateTime sessionStart) {
+        this.sessionStart = sessionStart;
+    }
+
+    public LocalDateTime getSessionEnd() {
+        return sessionEnd;
+    }
+
+    public void setSessionEnd(LocalDateTime sessionEnd) {
+        this.sessionEnd = sessionEnd;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public ScriptureBookType getBookType() {
+        return bookType;
+    }
+
+    public void setBookType(ScriptureBookType bookType) {
+        this.bookType = bookType;
+    }
 }

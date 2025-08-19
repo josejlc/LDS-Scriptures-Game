@@ -1,12 +1,10 @@
 package com.kjawank_jose.lds_scriptures_game.controller;
 
-
 import com.kjawank_jose.lds_scriptures_game.model.GameSession;
 import com.kjawank_jose.lds_scriptures_game.model.Question;
+import com.kjawank_jose.lds_scriptures_game.enums.ScriptureBookType;
 import com.kjawank_jose.lds_scriptures_game.repository.GameSessionRepository;
 import com.kjawank_jose.lds_scriptures_game.service.GameService;
-import com.kjawank_jose.lds_scriptures_game.service.VerseService;
-import com.kjawank_jose.lds_scriptures_game.enums.ScriptureBookType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,68 +13,55 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 
-import java.util.List;
-
 @Controller
-@RequestMapping("/")
 public class GameController {
 
     @Autowired
     private GameService gameService;
 
     @Autowired
-    private VerseService verseService;
-
-    @Autowired
     private GameSessionRepository gameSessionRepository;
 
-    @GetMapping
+    // --- Flujo del Juego ---
+
+    // 1. Página de inicio del juego
+    @GetMapping("/")
     public String home() {
         return "index";
     }
 
-    @GetMapping("/game/start")
-    public String showStartGame(Model model) {
-        model.addAttribute("books", ScriptureBookType.values());
-        return "start-game";
-    }
-
+    // 2. Inicia una nueva sesión de juego
     @PostMapping("/game/start")
     public String startGame(@RequestParam String playerName,
-                            @RequestParam int bookType,
+                            @RequestParam ScriptureBookType bookType,
                             HttpSession session) {
         if (playerName == null || playerName.trim().isEmpty()) {
             playerName = "Jugador";
         }
-
-        GameSession gameSession = gameService.createNewGameSession(playerName);
-        // GUARDAR INMEDIATAMENTE la sesión
-        gameSession = gameService.saveGameSession(gameSession);
-
-        ScriptureBookType selectedBook = ScriptureBookType.getByCode(bookType);
-
+        GameSession gameSession = gameService.createNewGameSession(playerName, bookType);
+        gameSessionRepository.save(gameSession);
         session.setAttribute("gameSession", gameSession);
-        session.setAttribute("selectedBook", selectedBook);
 
         return "redirect:/game/question";
     }
 
+    // 3. Muestra una pregunta del juego
     @GetMapping("/game/question")
     public String showQuestion(HttpSession session, Model model) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-        ScriptureBookType selectedBook = (ScriptureBookType) session.getAttribute("selectedBook");
 
         if (gameSession == null) {
-            return "redirect:/game/start";
+            return "redirect:/"; // Si no hay sesión, vuelve al inicio.
         }
 
-        if (!gameService.canContinueGame(gameSession)) {
+        // Si el juego ha terminado, redirige a los resultados
+        if (!gameSession.getIsActive()) {
             return "redirect:/game/results";
         }
 
-        Question question = gameService.generateQuestion(selectedBook);
+        Question question = gameService.generateQuestion(gameSession.getBookType());
         if (question == null) {
-            model.addAttribute("error", "No se pudo generar una pregunta");
+            model.addAttribute("error", "No se pudo generar una pregunta.");
             return "error";
         }
 
@@ -84,104 +69,61 @@ public class GameController {
 
         model.addAttribute("question", question);
         model.addAttribute("gameSession", gameSession);
-        model.addAttribute("selectedBook", selectedBook);
 
-        return "question";
+        return "game"; // Renderiza la página de juego
     }
 
-    @PostMapping("/game/answer")
-    public String processAnswer(@RequestParam String selectedAnswer,
-                                HttpSession session,
-                                RedirectAttributes redirectAttributes) {
+    // 4. Procesa la respuesta del jugador
+    @PostMapping("/game/submit")
+    public String submitAnswer(@RequestParam Long questionId,
+                               @RequestParam String selectedAnswer,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
+
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
         Question currentQuestion = (Question) session.getAttribute("currentQuestion");
 
         if (gameSession == null || currentQuestion == null) {
-            return "redirect:/game/start";
+            return "redirect:/";
         }
 
         boolean isCorrect = gameService.processAnswer(gameSession, currentQuestion, selectedAnswer);
 
-        // GUARDAR después de cada respuesta
-        gameSession = gameService.saveGameSession(gameSession);
-
-        redirectAttributes.addFlashAttribute("isCorrect", isCorrect);
-        redirectAttributes.addFlashAttribute("correctAnswer", currentQuestion.getCorrectAnswer());
-        redirectAttributes.addFlashAttribute("verse", currentQuestion.getVerse());
-
-        session.setAttribute("gameSession", gameSession);
-
-        return "redirect:/game/feedback";
-    }
-
-    @GetMapping("/game/feedback")
-    public String showFeedback(Model model, HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-
-        if (gameSession == null) {
-            return "redirect:/game/start";
+        if (!isCorrect) {
+            gameSession.incorrectAnswer();
+        } else {
+            gameSession.correctAnswer(1); // Suma 1 punto por respuesta correcta
         }
 
-        model.addAttribute("gameSession", gameSession);
-        return "feedback";
-    }
-
-    @PostMapping("/game/continue")
-    public String continueGame(HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-
-        if (gameSession == null || !gameService.canContinueGame(gameSession)) {
-            return "redirect:/game/results";
-        }
+        gameSessionRepository.save(gameSession); // Guarda la sesión después de cada respuesta
 
         return "redirect:/game/question";
     }
 
+    // 5. Muestra la página de resultados
     @GetMapping("/game/results")
     public String showResults(HttpSession session, Model model) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-
         if (gameSession != null) {
-            gameService.endGameSession(gameSession);
+            gameSession.setIsActive(false); // Marca la sesión como inactiva
+            gameSessionRepository.save(gameSession); // Guarda el resultado final
             model.addAttribute("gameSession", gameSession);
         }
-
+        session.invalidate(); // Invalida la sesión actual para un nuevo juego
         return "results";
     }
 
-    @PostMapping("/game/restart")
-    public String restartGame(HttpSession session) {
-        session.removeAttribute("gameSession");
-        session.removeAttribute("currentQuestion");
-        session.removeAttribute("selectedBook");
-        return "redirect:/game/start";
-    }
-
-    @GetMapping("/h2-console")
-    public String h2Console() {
-        return "redirect:/h2-console/";
-    }
+    // --- Tablas de Puntuaciones ---
 
     @GetMapping("/leaderboard")
     public String showLeaderboard(Model model) {
-        // Obtener top 10 puntuaciones
-        List<GameSession> topScores = gameSessionRepository.findTop10ByIsActiveFalseOrderByScoreDesc();
-        model.addAttribute("topScores", topScores);
+        // Lógica para mostrar la tabla de clasificación
         return "leaderboard";
     }
 
     @GetMapping("/history")
-    public String showHistory(@RequestParam(required = false) String playerName, Model model) {
-        List<GameSession> history;
-
-        if (playerName != null && !playerName.trim().isEmpty()) {
-            history = gameSessionRepository.findPlayerHistory(playerName);
-            model.addAttribute("searchedPlayer", playerName);
-        } else {
-            history = gameSessionRepository.findTop20ByIsActiveFalseOrderBySessionStartDesc();
-        }
-
-        model.addAttribute("gameHistory", history);
+    public String showHistory(Model model) {
+        // Lógica para mostrar el historial de juegos
         return "history";
     }
 }

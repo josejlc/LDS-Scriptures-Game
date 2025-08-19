@@ -3,51 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Dominio de Doctrina LDS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/css/game.css}" rel="stylesheet">
+    <title>Juego de las Escrituras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
 </head>
-<body class="bg-gradient">
-<div class="container-fluid min-vh-100 d-flex align-items-center">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <div class="card shadow-lg game-card">
-                    <div class="card-body text-center p-5">
-                        <div class="mb-4">
-                            <h1 class="display-4 text-primary mb-3">📖 Dominio de Doctrina</h1>
-                            <p class="lead text-muted">Pon a prueba tu conocimiento de las escrituras</p>
-                        </div>
+<body class="bg-light d-flex justify-content-center align-items-center vh-100">
 
-                        <div class="mb-4">
-                            <p class="text-secondary">
-                                Desafía tu memoria con versículos del Antiguo Testamento,
-                                Nuevo Testamento, Libro de Mormón y Doctrina y Convenios.
-                            </p>
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <a th:href="@{/game/start}" class="btn btn-primary btn-lg">
-                                🎮 Comenzar Juego
-                            </a>
-                            <a th:href="@{/leaderboard}" class="btn btn-success btn-lg">
-                                🏆 Tabla de Puntuaciones
-                            </a>
-                            <a th:href="@{/history}" class="btn btn-info btn-lg">
-                                📊 Historial de Juegos
-                            </a>
-                            <a href="/h2-console" target="_blank" class="btn btn-outline-secondary">
-                                🔧 Consola H2 (Desarrollo)
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="card p-4 shadow-sm" style="width: 100%; max-width: 400px;">
+    <h2 class="card-title text-center mb-4">Juego de las Escrituras</h2>
+    <h4 class="text-center mb-4">Ingresa tus datos para empezar</h4>
+    <form action="/game/start" method="post">
+        <div class="mb-3">
+            <label for="playerName" class="form-label">Tu Nombre</label>
+            <input type="text" class="form-control" id="playerName" name="playerName" required>
         </div>
-    </div>
+        <div class="mb-4">
+            <label for="seminaryYear" class="form-label">Año de Seminario</label>
+            <select class="form-select" id="seminaryYear" name="seminaryYear">
+                <option value="S1">S1 (14 años)</option>
+                <option value="S2">S2 (15 años)</option>
+                <option value="S3">S3 (16 años)</option>
+                <option value="S4">S4 (17 años)</option>
+            </select>
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Empezar el Juego</button>
+        </div>
+    </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/game.js}"></script>
 </body>
 </html>
