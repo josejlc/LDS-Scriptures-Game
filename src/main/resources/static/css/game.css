@@ -1,135 +1,134 @@
-/* Estilos generales */
+/* ===============  RESET & VARIABLES  =============== */
+:root {
+  --primary:   #0d6efd;
+  --success:   #198754;
+  --danger:    #dc3545;
+  --warning:   #ffc107;
+  --light:     #f8f9fa;
+  --font-main: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
+  margin: 0;
+  font-family: var(--font-main);
+  background: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.container {
-    background-color: #fff;
-    padding: 2em;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 90%;
-    max-width: 500px;
+/* ===============  LAYOUT  =============== */
+.container-fluid {
+  width: 100%;
+  padding: 1rem;
 }
 
-header h1 {
-    color: #004d99;
-    font-size: 2.5em;
-    margin-bottom: 0.5em;
-}
-
-/* Estilos de formulario */
-.form-group {
-    margin-bottom: 1.5em;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 0.5em;
-    font-size: 1.1em;
-}
-
-input[type="text"] {
-    width: 80%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-/* Botones de selección de libro */
-.book-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-}
-
-.book-button {
-    background-color: #e6f2ff;
-    border: 2px solid transparent;
-    border-radius: 20px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    color: #004d99;
-    user-select: none;
-}
-
-input[type="radio"] {
-    display: none;
-}
-
-input[type="radio"]:checked + .book-button {
-    background-color: #004d99;
-    color: #fff;
-    border-color: #002e66;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Botón de inicio */
-.button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.start-button {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-}
-
-.start-button:hover {
-    background-color: #0056b3;
-}
-
-/* Estilos adicionales para la página de juego */
-
-/* Tarjeta del juego */
 .game-card {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  max-width: 540px;
+  width: 100%;
+  margin: auto;
+  border-radius: 1rem;
+  overflow: hidden;
 }
 
-/* Opciones de respuesta */
-.btn-outline-primary {
-    color: #007bff;
-    border-color: #007bff;
+/* ===============  TYPOGRAPHY  =============== */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: .5rem;
 }
 
-.btn-outline-primary:hover {
-    background-color: #007bff;
-    color: #fff;
+.display-1,
+.display-2 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
 }
 
-/* Feedback de respuesta (correcto/incorrecto) */
-.text-success {
-    color: #28a745 !important;
-    font-size: 1.2em;
+.lead {
+  font-size: 1.1rem;
 }
 
-.text-danger {
-    color: #dc3545 !important;
-    font-size: 1.2em;
+/* ===============  BUTTONS & FORM  =============== */
+.btn {
+  white-space: normal;
+  transition: transform .15s;
 }
 
-/* Estilos para la página de resultados */
-.text-success.font-weight-bold {
-    font-weight: bold;
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.form-control,
+.form-select {
+  font-size: 1rem;
+  border-radius: .5rem;
+}
+
+/* ===============  UTILITIES  =============== */
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.shadow-lg {
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+}
+
+/* ===============  TABLES (HISTORY / LEADERBOARD)  =============== */
+.table-responsive {
+  max-height: 50vh;
+}
+@media (max-width: 576px) {
+  .table {
+    font-size: 0.875rem;
+  }
+}
+
+/* ===============  ANIMATIONS  =============== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.fade-in {
+  animation: fadeIn .4s ease-out;
+}
+
+/* ===============  RESULTS PAGE  =============== */
+.score-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: var(--light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+/* ===============  RESPONSIVE FIXES  =============== */
+@media (max-width: 576px) {
+  .container-fluid {
+    padding: 0.5rem;
+  }
+
+  .game-card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .btn-lg {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Ajustes rápidos de letras grandes */
+  .display-1,
+  .display-2 {
+    font-size: 2rem;
+  }
 }

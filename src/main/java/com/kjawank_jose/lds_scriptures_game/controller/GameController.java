@@ -118,6 +118,7 @@ public class GameController {
     @GetMapping("/leaderboard")
     public String showLeaderboard(Model model) {
         // Lógica para mostrar la tabla de clasificación
+        System.out.println("Entró a leaderboard");
         return "leaderboard";
     }
 

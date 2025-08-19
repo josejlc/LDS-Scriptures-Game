@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -15,18 +14,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/images/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/game/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/leaderboard")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/history")).permitAll()
+                        // rutas públicas
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/game/**").permitAll()
+                        .requestMatchers("/leaderboard/**").permitAll()
+                        .requestMatchers("/history/**").permitAll()
+                        // cualquier otra requiere login
                         .anyRequest().authenticated()
                 )
+                // deshabilitar CSRF y frameOptions para h2-console
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions().disable());
+
         return http.build();
     }
 }
