@@ -3,27 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados</title>
+    <title>Resultados Finales - Juego Escrituras LDS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
+    <link th:href="@{/css/game.css}" rel="stylesheet">
+    <meta name="description" content="Resultados finales del juego de escrituras LDS">
 </head>
-<body class="bg-light d-flex justify-content-center align-items-center vh-100 text-center">
+<body class="bg-gradient">
+    <div class="container-fluid min-vh-100 d-flex align-items-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card shadow-lg game-card">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h3 class="mb-0">🏆 ¡Juego Completado!</h3>
+                        </div>
+                        <div class="card-body text-center p-5">
+                            <!-- Player Name and Congratulations -->
+                            <div class="player-info mb-4">
+                                <h3 class="mb-3">
+                                    Felicitaciones, <strong th:text="${gameSession.playerName}">Jugador</strong>
+                                </h3>
+                                
+                                <!-- Final Score -->
+                                <div class="final-score mb-4">
+                                    <div class="score-circle mx-auto mb-3">
+                                        <h1 class="display-2 fw-bold text-primary mb-0">
+                                            <span th:text="${gameSession.score}">0</span>
+                                        </h1>
+                                        <p class="text-muted mb-0">puntos</p>
+                                    </div>
+                                </div>
+                            </div>
 
-<div class="card p-5 shadow-lg" style="width: 100%; max-width: 500px;">
-    <h2 class="mb-4">¡Juego Terminado!</h2>
-    <h3 class="mb-3">Resultados de <span th:text="${gameSession.playerName}"></span></h3>
-    <h1 class="display-3 fw-bold text-primary mb-4">
-        <span th:text="${gameSession.score}"></span> puntos
-    </h1>
-    <p class="lead">Respuestas Correctas: <span th:text="${gameSession.correctAnswers}"></span></p>
-    <p class="lead">Respuestas Incorrectas: <span th:text="${gameSession.incorrectAnswers}"></span></p>
-    <p class="lead">Racha más larga: <span th:text="${gameSession.longestStreak}"></span></p>
-    <hr>
-    <div class="d-grid gap-2 mt-4">
-        <a href="/" class="btn btn-success btn-lg">Empezar un Nuevo Juego</a>
-        <a href="/leaderboard" class="btn btn-outline-secondary">Ver Tabla de Puntuaciones</a>
+                            <!-- Detailed Statistics -->
+                            <div class="stats-grid mb-4">
+                                <div class="row">
+                                    <div class="col-6 col-md-3 mb-3">
+                                        <div class="stat-card bg-success text-white">
+                                            <div class="stat-icon">✅</div>
+                                            <h4 th:text="${gameSession.correctAnswers}">0</h4>
+                                            <small>Correctas</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-3 mb-3">
+                                        <div class="stat-card bg-danger text-white">
+                                            <div class="stat-icon">❌</div>
+                                            <h4 th:text="${gameSession.incorrectAnswers}">0</h4>
+                                            <small>Incorrectas</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-3 mb-3">
+                                        <div class="stat-card bg-warning text-dark">
+                                            <div class="stat-icon">🔥</div>
+                                            <h4 th:text="${gameSession.bestStreak}">0</h4>
+                                            <small>Mejor Racha</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-3 mb-3">
+                                        <div class="stat-card bg-info text-white">
+                                            <div class="stat-icon">📊</div>
+                                            <h4 th:text="${gameSession.levelReached}">1</h4>
+                                            <small>Nivel Alcanzado</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Performance Analysis -->
+                            <div class="performance-analysis mb-4">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">📈 Análisis de Rendimiento</h6>
+                                        <div class="row text-center">
+                                            <div class="col-4">
+                                                <h5 th:text="${#numbers.formatDecimal(gameSession.accuracyPercentage, 1, 1)} + '%'">0%</h5>
+                                                <small class="text-muted">Precisión</small>
+                                            </div>
+                                            <div class="col-4">
+                                                <h5 th:text="${gameSession.correctAnswers + gameSession.incorrectAnswers}">0</h5>
+                                                <small class="text-muted">Total Preguntas</small>
+                                            </div>
+                                            <div class="col-4" th:if="${gameSession.sessionEnd != null}">
+                                                <h5 th:text="${#temporals.formatDuration(T(java.time.Duration).between(gameSession.sessionStart, gameSession.sessionEnd))}">0m</h5>
+                                                <small class="text-muted">Duración</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Performance Message -->
+                            <div class="performance-message mb-4">
+                                <div th:if="${gameSession.accuracyPercentage >= 80}" 
+                                     class="alert alert-success" role="alert">
+                                    <h6 class="alert-heading">🌟 ¡Excelente!</h6>
+                                    <p class="mb-0">Tu conocimiento de las escrituras es impresionante. ¡Sigue estudiando!</p>
+                                </div>
+                                
+                                <div th:if="${gameSession.accuracyPercentage >= 60 and gameSession.accuracyPercentage < 80}" 
+                                     class="alert alert-warning" role="alert">
+                                    <h6 class="alert-heading">👍 ¡Buen trabajo!</h6>
+                                    <p class="mb-0">Vas por buen camino. Con más estudio puedes mejorar aún más.</p>
+                                </div>
+                                
+                                <div th:if="${gameSession.accuracyPercentage < 60}" 
+                                     class="alert alert-info" role="alert">
+                                    <h6 class="alert-heading">📚 ¡Sigue estudiando!</h6>
+                                    <p class="mb-0">Hay mucho potencial para crecer. ¡No te rindas y sigue practicando!</p>
+                                </div>
+                            </div>
+
+                            <!-- Rank Information (if available) -->
+                            <div class="rank-info mb-4" th:if="${playerRank}">
+                                <div class="alert alert-primary" role="alert">
+                                    🏆 Tu puntuación te coloca en el puesto <strong th:text="${playerRank}">1</strong> 
+                                    de todos los jugadores
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <div class="d-grid gap-2 mb-3">
+                                    <a href="/" class="btn btn-success btn-lg">
+                                        🔄 Jugar de Nuevo
+                                    </a>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <a href="/leaderboard" class="btn btn-warning w-100">
+                                            🏆 Ver Ranking
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <a href="/history" class="btn btn-info w-100">
+                                            📊 Mi Historial
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <button class="btn btn-outline-secondary w-100" 
+                                                onclick="shareResults()">
+                                            📤 Compartir
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
+    <!-- Share Modal -->
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel">📤 Compartir Resultados</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¡Comparte tus resultados!</p>
+                    <textarea class="form-control" id="shareText" rows="3" readonly></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="copyToClipboard()">📋 Copiar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/game.js}"></script>
+    <script th:inline="javascript">
+        const playerName = /*[[${gameSession.playerName}]]*/ 'Jugador';
+        const score = /*[[${gameSession.score}]]*/ 0;
+        const correctAnswers = /*[[${gameSession.correctAnswers}]]*/ 0;
+        const totalQuestions = /*[[${gameSession.correctAnswers + gameSession.incorrectAnswers}]]*/ 0;
+        const accuracy = /*[[${gameSession.accuracyPercentage}]]*/ 0;
+
+        function shareResults() {
+            const shareText = `🏆 ¡Jugué el Juego de Escrituras LDS!
+            
+👤 Jugador: ${playerName}
+⭐ Puntuación: ${score} puntos
+✅ Correctas: ${correctAnswers}/${totalQuestions}
+🎯 Precisión: ${accuracy.toFixed(1)}%
+
+¡Prueba tú también! 📚✨`;
+            
+            document.getElementById('shareText').value = shareText;
+            
+            const shareModal = new bootstrap.Modal(document.getElementById('shareModal'));
+            shareModal.show();
+        }
+
+        function copyToClipboard() {
+            const shareText = document.getElementById('shareText');
+            shareText.select();
+            shareText.setSelectionRange(0, 99999);
+            
+            try {
+                document.execCommand('copy');
+                
+                // Show success feedback
+                const copyBtn = event.target;
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '✅ ¡Copiado!';
+                copyBtn.disabled = true;
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.disabled = false;
+                }, 2000);
+                
+            } catch (err) {
+                alert('Error al copiar al portapapeles');
+            }
+        }
+
+        // Add entrance animations
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.stat-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * (index + 1));
+            });
+        });
+    </script>
 </body>
 </html>

@@ -3,87 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultado - Dominio de Doctrina</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Resultado - Juego Escrituras LDS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/game.css}" rel="stylesheet">
+    <meta name="description" content="Resultado de la pregunta en el juego de escrituras LDS">
 </head>
 <body class="bg-gradient">
-<div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg game-card">
-                <div class="card-body text-center p-5">
-                    <!-- Resultado -->
-                    <div th:if="${isCorrect}" class="mb-4">
-                        <div class="display-1 text-success mb-3">✓</div>
-                        <h2 class="text-success">¡CORRECTO!</h2>
-                        <p class="text-muted">Ganaste puntos por tu respuesta</p>
-                    </div>
-
-                    <div th:unless="${isCorrect}" class="mb-4">
-                        <div class="display-1 text-danger mb-3">✗</div>
-                        <h2 class="text-danger">Incorrecto</h2>
-                        <p class="text-muted">La respuesta correcta era:</p>
-                        <div class="alert alert-info">
-                            <strong th:text="${correctAnswer}">Respuesta correcta</strong>
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-lg game-card">
+                    <div class="card-body text-center p-5">
+                        <!-- Resultado con animación -->
+                        <div class="result-container mb-4" th:if="${isCorrect}">
+                            <div class="result-icon correct-icon mb-3">
+                                <i class="display-1 text-success">✓</i>
+                            </div>
+                            <h2 class="text-success mb-2">¡CORRECTO!</h2>
+                            <p class="text-muted mb-3">¡Excelente conocimiento de las escrituras!</p>
+                            <div class="alert alert-success" role="alert">
+                                <strong>+<span th:text="${pointsEarned ?: 10}">10</span> puntos</strong> agregados a tu puntuación
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Versículo completo -->
-                    <div class="scripture-display mb-4" th:if="${verse}">
-                        <h5>📖 Versículo completo:</h5>
-                        <blockquote class="blockquote">
-                            <p th:text="${verse.text}">Texto del versículo</p>
-                            <footer class="blockquote-footer">
-                                <cite th:text="${verse.reference + ' (' + verse.book.name + ')'}">Referencia</cite>
-                            </footer>
-                        </blockquote>
-                    </div>
+                        <div class="result-container mb-4" th:unless="${isCorrect}">
+                            <div class="result-icon incorrect-icon mb-3">
+                                <i class="display-1 text-danger">✗</i>
+                            </div>
+                            <h2 class="text-danger mb-2">Incorrecto</h2>
+                            <p class="text-muted mb-3">No te preocupes, ¡sigue estudiando!</p>
+                            
+                            <div class="alert alert-info" role="alert" th:if="${correctAnswer}">
+                                <h6 class="alert-heading mb-2">La respuesta correcta era:</h6>
+                                <strong th:text="${correctAnswer}">Respuesta correcta</strong>
+                            </div>
+                        </div>
 
-                    <!-- Estadísticas actuales -->
-                    <div class="row mb-4">
-                        <div class="col-3">
-                            <h6 class="text-muted">Puntos</h6>
-                            <h4 class="text-success" th:text="${gameSession.score}">0</h4>
+                        <!-- Versículo completo (si está disponible) -->
+                        <div class="scripture-display mb-4" th:if="${verse}">
+                            <div class="card bg-light">
+                                <div class="card-header">
+                                    <h6 class="mb-0">📖 Versículo Completo</h6>
+                                </div>
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <p class="scripture-text" th:text="${verse.text}">Texto del versículo</p>
+                                        <footer class="blockquote-footer mt-2">
+                                            <cite th:text="${verse.reference + ' (' + verse.book.name + ')'}">Referencia</cite>
+                                        </footer>
+                                    </blockquote>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-3">
-                            <h6 class="text-muted">Nivel</h6>
-                            <h4 class="text-primary" th:text="${gameSession.levelReached}">1</h4>
-                        </div>
-                        <div class="col-3">
-                            <h6 class="text-muted">Vidas</h6>
-                            <h4 class="text-danger" th:text="${gameSession.livesRemaining}">3</h4>
-                        </div>
-                        <div class="col-3">
-                            <h6 class="text-muted">Racha</h6>
-                            <h4 class="text-warning" th:text="${gameSession.currentStreak}">0</h4>
-                        </div>
-                    </div>
 
-                    <!-- Acciones -->
-                    <div class="d-grid gap-2" th:if="${gameSession.livesRemaining > 0}">
-                        <form th:action="@{/game/continue}" method="post">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                ➡️ Siguiente Pregunta
-                            </button>
-                        </form>
-                        <a th:href="@{/game/results}" class="btn btn-outline-secondary">
-                            🏁 Terminar Juego
-                        </a>
-                    </div>
+                        <!-- Estadísticas actuales -->
+                        <div class="row mb-4">
+                            <div class="col-6 col-md-3 mb-2">
+                                <div class="stat-card">
+                                    <h6 class="text-muted mb-1">⭐ Puntos</h6>
+                                    <h4 class="text-success mb-0" th:text="${gameSession.score}">0</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mb-2">
+                                <div class="stat-card">
+                                    <h6 class="text-muted mb-1">📊 Nivel</h6>
+                                    <h4 class="text-primary mb-0" th:text="${gameSession.levelReached}">1</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mb-2">
+                                <div class="stat-card">
+                                    <h6 class="text-muted mb-1">❤️ Vidas</h6>
+                                    <h4 th:class="${gameSession.livesRemaining > 1 ? 'text-success' : 'text-danger'} + ' mb-0'" 
+                                       th:text="${gameSession.livesRemaining}">3</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mb-2">
+                                <div class="stat-card">
+                                    <h6 class="text-muted mb-1">🔥 Racha</h6>
+                                    <h4 class="text-warning mb-0" th:text="${gameSession.currentStreak}">0</h4>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="d-grid" th:unless="${gameSession.livesRemaining > 0}">
-                        <a th:href="@{/game/results}" class="btn btn-danger btn-lg">
-                            💀 Game Over - Ver Resultados
-                        </a>
+                        <!-- Mensaje motivacional -->
+                        <div class="motivation-message mb-4" th:if="${gameSession.currentStreak >= 3}">
+                            <div class="alert alert-warning" role="alert">
+                                🔥 ¡Racha ardiente! <span th:text="${gameSession.currentStreak}">3</span> respuestas correctas seguidas
+                            </div>
+                        </div>
+
+                        <!-- Acciones - Juego continúa -->
+                        <div class="action-buttons" th:if="${gameSession.livesRemaining > 0}">
+                            <div class="d-grid gap-2 mb-3">
+                                <form th:action="@{/game/continue}" method="post">
+                                    <button type="submit" 
+                                            class="btn btn-primary btn-lg w-100"
+                                            id="continueBtn">
+                                        ➡️ Siguiente Pregunta
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    <a th:href="@{/game/results}" 
+                                       class="btn btn-outline-secondary w-100"
+                                       onclick="return confirm('¿Seguro que quieres terminar el juego?')">
+                                        🏁 Terminar
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a th:href="@{/}" 
+                                       class="btn btn-outline-danger w-100"
+                                       onclick="return confirm('¿Seguro que quieres salir? Se perderá el progreso.')">
+                                        🚪 Salir
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Acciones - Game Over -->
+                        <div class="action-buttons" th:unless="${gameSession.livesRemaining > 0}">
+                            <div class="alert alert-danger mb-4" role="alert">
+                                <h5 class="alert-heading">💀 Game Over</h5>
+                                <p class="mb-0">Se agotaron tus vidas. ¡Pero no te rindas, inténtalo de nuevo!</p>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a th:href="@{/game/results}" 
+                                   class="btn btn-danger btn-lg">
+                                    📊 Ver Resultados Finales
+                                </a>
+                                <a th:href="@{/}" 
+                                   class="btn btn-success">
+                                    🔄 Jugar de Nuevo
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/game.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/game.js}"></script>
+    <script>
+        // Auto-continue after delay (optional)
+        const isCorrect = /*[[${isCorrect}]]*/ false;
+        const livesRemaining = /*[[${gameSession.livesRemaining}]]*/ 3;
+        
+        // Add loading state to continue button
+        const continueBtn = document.getElementById('continueBtn');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', function() {
+                this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Cargando...';
+                this.disabled = true;
+            });
+        }
+
+        // Add entrance animations
+        window.addEventListener('load', function() {
+            const resultContainer = document.querySelector('.result-container');
+            if (resultContainer) {
+                resultContainer.style.opacity = '0';
+                resultContainer.style.transform = 'scale(0.8)';
+                
+                setTimeout(() => {
+                    resultContainer.style.transition = 'all 0.5s ease-out';
+                    resultContainer.style.opacity = '1';
+                    resultContainer.style.transform = 'scale(1)';
+                }, 100);
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const continueBtn = document.getElementById('continueBtn');
+                if (continueBtn && !continueBtn.disabled) {
+                    e.preventDefault();
+                    continueBtn.click();
+                }
+            }
+        });
+
+        // Auto-focus continue button for accessibility
+        window.addEventListener('load', function() {
+            const continueBtn = document.getElementById('continueBtn');
+            if (continueBtn) {
+                continueBtn.focus();
+            }
+        });
+    </script>
 </body>
 </html>
