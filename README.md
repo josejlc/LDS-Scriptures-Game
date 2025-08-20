@@ -73,7 +73,7 @@ LDS-Scriptures-Game/
 ├── src/
 │   ├── main/
 │   │   ├── java/
-│   │   │   └── com/lds/seminario/
+│   │   │   └── com/kjawank_jose/LDS-Scriptures-Game/
 │   │   │       ├── controller/          # Controladores web
 │   │   │       ├── model/               # Entidades y DTOs
 │   │   │       ├── service/             # Lógica de negocio
