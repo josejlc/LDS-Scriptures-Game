@@ -9,222 +9,222 @@
     <meta name="description" content="Pregunta del juego de escrituras LDS">
 </head>
 <body class="bg-gradient">
-    <!-- Progress Indicator -->
-    <div class="progress-container mb-3">
-        <div class="progress" style="height: 4px;">
-            <div class="progress-bar bg-success" 
-                 role="progressbar" 
-                 th:style="'width: ' + ${(gameSession.levelReached * 10) > 100 ? 100 : (gameSession.levelReached * 10)} + '%'"
-                 aria-label="Progreso del juego"></div>
-        </div>
+<!-- Progress Indicator -->
+<div class="progress-container mb-3">
+    <div class="progress" style="height: 4px;">
+        <div class="progress-bar bg-success"
+             role="progressbar"
+             th:style="'width: ' + ${(gameSession.levelReached * 10) > 100 ? 100 : (gameSession.levelReached * 10)} + '%'"
+             aria-label="Progreso del juego"></div>
     </div>
+</div>
 
-    <div class="container-fluid py-4">
-        <!-- Stats Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card shadow-sm">
-                    <div class="card-body py-3">
-                        <div class="row text-center">
-                            <div class="col-3">
-                                <div class="stat-item">
-                                    <h6 class="text-muted mb-1">👤 Jugador</h6>
-                                    <small class="fw-bold" th:text="${gameSession.playerName}">Jugador</small>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="stat-item">
-                                    <h6 class="text-muted mb-1">📊 Nivel</h6>
-                                    <h4 class="text-primary mb-0" th:text="${gameSession.levelReached}">1</h4>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="stat-item">
-                                    <h6 class="text-muted mb-1">⭐ Puntos</h6>
-                                    <h4 class="text-success mb-0" th:text="${gameSession.score}">0</h4>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="stat-item">
-                                    <h6 class="text-muted mb-1">❤️ Vidas</h6>
-                                    <h4 class="text-danger mb-0" th:text="${gameSession.livesRemaining}">3</h4>
-                                </div>
+<div class="container-fluid py-4">
+    <!-- Stats Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body py-3">
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <div class="stat-item">
+                                <h6 class="text-muted mb-1">👤 Jugador</h6>
+                                <small class="fw-bold" th:text="${gameSession.playerName}">Jugador</small>
                             </div>
                         </div>
-                        
-                        <!-- Streak Indicator -->
-                        <div class="text-center mt-2" th:if="${gameSession.currentStreak > 0}">
+                        <div class="col-3">
+                            <div class="stat-item">
+                                <h6 class="text-muted mb-1">📊 Nivel</h6>
+                                <h4 class="text-primary mb-0" th:text="${gameSession.levelReached}">1</h4>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat-item">
+                                <h6 class="text-muted mb-1">⭐ Puntos</h6>
+                                <h4 class="text-success mb-0" th:text="${gameSession.score}">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat-item">
+                                <h6 class="text-muted mb-1">❤️ Vidas</h6>
+                                <h4 class="text-danger mb-0" th:text="${gameSession.livesRemaining}">3</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Streak Indicator -->
+                    <div class="text-center mt-2" th:if="${gameSession.currentStreak > 0}">
                             <span class="badge bg-warning text-dark">
                                 🔥 Racha: <span th:text="${gameSession.currentStreak}">0</span>
                             </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Question Card -->
-        <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-8">
-                <div class="card shadow-lg game-card">
-                    <div class="card-header bg-info text-white">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h5 class="mb-0" th:text="${question.gameMode ?: 'Dominio de Doctrina'}">Modo de Juego</h5>
-                            </div>
-                            <div class="col-auto">
-                                <small>Pregunta #<span th:text="${gameSession.levelReached}">1</span></small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="question-container mb-4">
-                            <div class="question-text">
-                                <p class="lead text-center" th:utext="${question.questionText}">Pregunta aquí</p>
-                            </div>
-                        </div>
-
-                        <form th:action="@{/game/answer}" method="post" id="answerForm">
-                            <input type="hidden" name="questionId" th:value="${question.id}">
-                            
-                            <div class="d-grid gap-3" role="group" aria-label="Opciones de respuesta">
-                                <button type="submit" 
-                                        name="selectedAnswer" 
-                                        th:value="${question.optionA}"
-                                        class="btn btn-outline-primary btn-lg text-start option-btn"
-                                        data-option="A">
-                                    <span class="option-letter">A.</span> 
-                                    <span th:text="${question.optionA}">Opción A</span>
-                                </button>
-                                
-                                <button type="submit" 
-                                        name="selectedAnswer" 
-                                        th:value="${question.optionB}"
-                                        class="btn btn-outline-primary btn-lg text-start option-btn"
-                                        data-option="B">
-                                    <span class="option-letter">B.</span> 
-                                    <span th:text="${question.optionB}">Opción B</span>
-                                </button>
-                                
-                                <button type="submit" 
-                                        name="selectedAnswer" 
-                                        th:value="${question.optionC}"
-                                        class="btn btn-outline-primary btn-lg text-start option-btn"
-                                        data-option="C">
-                                    <span class="option-letter">C.</span> 
-                                    <span th:text="${question.optionC}">Opción C</span>
-                                </button>
-                                
-                                <button type="submit" 
-                                        name="selectedAnswer" 
-                                        th:value="${question.optionD}"
-                                        class="btn btn-outline-primary btn-lg text-start option-btn"
-                                        data-option="D">
-                                    <span class="option-letter">D.</span> 
-                                    <span th:text="${question.optionD}">Opción D</span>
-                                </button>
-                            </div>
-                        </form>
-
-                        <!-- Quick Actions -->
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <a th:href="@{/game/results}" 
-                                   class="btn btn-outline-secondary w-100"
-                                   onclick="return confirm('¿Seguro que quieres terminar el juego?')">
-                                    🏁 Terminar Juego
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a th:href="@{/}" 
-                                   class="btn btn-outline-danger w-100"
-                                   onclick="return confirm('¿Seguro que quieres salir? Se perderá el progreso.')">
-                                    🚪 Salir
-                                </a>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Loading Modal -->
-    <div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center py-4">
-                    <div class="spinner-border text-primary mb-3" role="status">
-                        <span class="visually-hidden">Procesando respuesta...</span>
+    <!-- Question Card -->
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg game-card">
+                <div class="card-header bg-info text-white">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0" th:text="${question.gameMode ?: 'Dominio de Doctrina'}">Modo de Juego</h5>
+                        </div>
+                        <div class="col-auto">
+                            <small>Pregunta #<span th:text="${gameSession.levelReached}">1</span></small>
+                        </div>
                     </div>
-                    <p class="mb-0">Procesando tu respuesta...</p>
+                </div>
+                <div class="card-body p-4">
+                    <div class="question-container mb-4">
+                        <div class="question-text">
+                            <p class="lead text-center" th:utext="${question.questionText}">Pregunta aquí</p>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/game/answer}" method="post" id="answerForm">
+                        <input type="hidden" name="questionId" th:value="${question.id}">
+
+                        <div class="d-grid gap-3" role="group" aria-label="Opciones de respuesta">
+                            <button type="submit"
+                                    name="selectedAnswer"
+                                    th:value="${question.optionA}"
+                                    class="btn btn-outline-primary btn-lg text-start option-btn"
+                                    data-option="A">
+                                <span class="option-letter">A.</span>
+                                <span th:text="${question.optionA}">Opción A</span>
+                            </button>
+
+                            <button type="submit"
+                                    name="selectedAnswer"
+                                    th:value="${question.optionB}"
+                                    class="btn btn-outline-primary btn-lg text-start option-btn"
+                                    data-option="B">
+                                <span class="option-letter">B.</span>
+                                <span th:text="${question.optionB}">Opción B</span>
+                            </button>
+
+                            <button type="submit"
+                                    name="selectedAnswer"
+                                    th:value="${question.optionC}"
+                                    class="btn btn-outline-primary btn-lg text-start option-btn"
+                                    data-option="C">
+                                <span class="option-letter">C.</span>
+                                <span th:text="${question.optionC}">Opción C</span>
+                            </button>
+
+                            <button type="submit"
+                                    name="selectedAnswer"
+                                    th:value="${question.optionD}"
+                                    class="btn btn-outline-primary btn-lg text-start option-btn"
+                                    data-option="D">
+                                <span class="option-letter">D.</span>
+                                <span th:text="${question.optionD}">Opción D</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Quick Actions -->
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <a th:href="@{/game/results}"
+                               class="btn btn-outline-secondary w-100"
+                               onclick="return confirm('¿Seguro que quieres terminar el juego?')">
+                                🏁 Terminar Juego
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a th:href="@{/}"
+                               class="btn btn-outline-danger w-100"
+                               onclick="return confirm('¿Seguro que quieres salir? Se perderá el progreso.')">
+                                🚪 Salir
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/game.js}"></script>
-    <script>
-        // Add hover effects and selection feedback
-        document.querySelectorAll('.option-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                // Show loading modal
-                const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
-                loadingModal.show();
-                
-                // Disable all buttons to prevent double submission
-                document.querySelectorAll('.option-btn').forEach(btn => {
-                    btn.disabled = true;
-                    btn.classList.add('disabled');
-                });
-                
-                // Highlight selected option
-                this.classList.remove('btn-outline-primary');
-                this.classList.add('btn-primary');
-                
-                // Add selected animation
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 150);
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Procesando respuesta...</span>
+                </div>
+                <p class="mb-0">Procesando tu respuesta...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/game.js}"></script>
+<script>
+    // Add hover effects and selection feedback
+    document.querySelectorAll('.option-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Show loading modal
+            const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+            loadingModal.show();
+
+            // Disable all buttons to prevent double submission
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('disabled');
             });
-            
-            // Add keyboard navigation
-            button.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.click();
-                }
-            });
+
+            // Highlight selected option
+            this.classList.remove('btn-outline-primary');
+            this.classList.add('btn-primary');
+
+            // Add selected animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
         });
 
-        // Add keyboard shortcuts for options (1-4, A-D)
-        document.addEventListener('keydown', function(e) {
-            const key = e.key.toLowerCase();
-            let optionIndex = -1;
-            
-            if (['1', '2', '3', '4'].includes(key)) {
-                optionIndex = parseInt(key) - 1;
-            } else if (['a', 'b', 'c', 'd'].includes(key)) {
-                optionIndex = key.charCodeAt(0) - 97; // 'a' = 97
-            }
-            
-            if (optionIndex >= 0 && optionIndex < 4) {
-                const buttons = document.querySelectorAll('.option-btn');
-                if (buttons[optionIndex] && !buttons[optionIndex].disabled) {
-                    buttons[optionIndex].click();
-                }
+        // Add keyboard navigation
+        button.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
             }
         });
+    });
 
-        // Auto-focus first option for accessibility
-        window.addEventListener('load', function() {
-            const firstOption = document.querySelector('.option-btn');
-            if (firstOption) {
-                firstOption.focus();
+    // Add keyboard shortcuts for options (1-4, A-D)
+    document.addEventListener('keydown', function(e) {
+        const key = e.key.toLowerCase();
+        let optionIndex = -1;
+
+        if (['1', '2', '3', '4'].includes(key)) {
+            optionIndex = parseInt(key) - 1;
+        } else if (['a', 'b', 'c', 'd'].includes(key)) {
+            optionIndex = key.charCodeAt(0) - 97; // 'a' = 97
+        }
+
+        if (optionIndex >= 0 && optionIndex < 4) {
+            const buttons = document.querySelectorAll('.option-btn');
+            if (buttons[optionIndex] && !buttons[optionIndex].disabled) {
+                buttons[optionIndex].click();
             }
-        });
-    </script>
+        }
+    });
+
+    // Auto-focus first option for accessibility
+    window.addEventListener('load', function() {
+        const firstOption = document.querySelector('.option-btn');
+        if (firstOption) {
+            firstOption.focus();
+        }
+    });
+</script>
 </body>
 </html>

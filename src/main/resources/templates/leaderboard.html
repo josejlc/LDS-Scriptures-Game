@@ -3,131 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabla de Puntuaciones - Dominio de Doctrina</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Tabla de Puntuaciones - Juego Escrituras LDS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/game.css}" rel="stylesheet">
+    <meta name="description" content="Mejores puntuaciones del juego de escrituras LDS">
 </head>
 <body class="bg-gradient">
-<div class="container-fluid min-vh-100 d-flex align-items-center">
-    <div class="container">
-        <div class="container-fluid py-4">
-            <div class="row justify-content-center">
-                <div class="col-md-10 col-lg-8">
-                    <div class="card shadow-lg game-card">
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg game-card">
+                <div class="card-header bg-warning text-dark text-center">
+                    <h3 class="mb-1">🏆 Tabla de Puntuaciones</h3>
+                    <p class="mb-0">Mejores jugadores de escrituras LDS</p>
+                </div>
+                <div class="card-body p-4">
 
-                        <!-- HEADER -->
-                        <div class="card-header bg-warning text-dark text-center">
-                            <h3>🏆 Tabla de Puntuaciones</h3>
-                            <p class="mb-0">Top 10 Mejores Jugadores</p>
+                    <!-- Empty State -->
+                    <div th:if="${#lists.isEmpty(topScores)}" class="empty-state text-center py-5">
+                        <div class="display-4 text-muted mb-3">🏆</div>
+                        <h4 class="text-muted">No hay puntuaciones registradas</h4>
+                        <p class="text-secondary mb-4">¡Sé el primero en aparecer en el leaderboard!</p>
+                        <a th:href="@{/game/start}" class="btn btn-primary btn-lg">
+                            🎮 Comenzar mi Primer Juego
+                        </a>
+                    </div>
+
+                    <!-- Leaderboard Content -->
+                    <div th:unless="${#lists.isEmpty(topScores)}">
+                        <!-- Top 3 Podium -->
+                        <div class="podium-container mb-5" th:if="${#lists.size(topScores) >= 3}">
+                            <div class="row justify-content-center text-center">
+                                <!-- Second Place -->
+                                <div class="col-4">
+                                    <div class="podium-card second-place" th:if="${#lists.size(topScores) >= 2}">
+                                        <div class="podium-position">🥈</div>
+                                        <div class="podium-score" th:text="${topScores[1].score}">0</div>
+                                        <h6 class="podium-name" th:text="${topScores[1].playerName}">Jugador</h6>
+                                        <small class="text-muted" th:text="${#numbers.formatDecimal(topScores[1].accuracyPercentage, 1, 1)} + '% precisión'">0%</small>
+                                    </div>
+                                </div>
+
+                                <!-- First Place -->
+                                <div class="col-4">
+                                    <div class="podium-card first-place">
+                                        <div class="podium-crown">👑</div>
+                                        <div class="podium-position">🥇</div>
+                                        <div class="podium-score champion" th:text="${topScores[0].score}">0</div>
+                                        <h5 class="podium-name champion" th:text="${topScores[0].playerName}">Campeón</h5>
+                                        <small class="text-muted" th:text="${#numbers.formatDecimal(topScores[0].accuracyPercentage, 1, 1)} + '% precisión'">0%</small>
+                                        <div class="champion-stats mt-2">
+                                            <small class="badge bg-success" th:text="'Nivel ' + ${topScores[0].levelReached}">Nivel 1</small>
+                                            <small class="badge bg-warning text-dark" th:text="'Racha ' + ${topScores[0].bestStreak}">Racha 0</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Third Place -->
+                                <div class="col-4">
+                                    <div class="podium-card third-place" th:if="${#lists.size(topScores) >= 3}">
+                                        <div class="podium-position">🥉</div>
+                                        <div class="podium-score" th:text="${topScores[2].score}">0</div>
+                                        <h6 class="podium-name" th:text="${topScores[2].playerName}">Jugador</h6>
+                                        <small class="text-muted" th:text="${#numbers.formatDecimal(topScores[2].accuracyPercentage, 1, 1)} + '% precisión'">0%</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="card-body p-4">
-
-                            <!-- SI NO HAY PUNTUACIONES -->
-                            <div th:if="${#lists.isEmpty(topScores)}" class="text-center py-5">
-                                <div class="display-4 text-muted mb-3">📋</div>
-                                <h4 class="text-muted">No hay puntuaciones registradas</h4>
-                                <p class="text-secondary">¡Sé el primero en jugar!</p>
-                                <a th:href="@{/game/start}" class="btn btn-primary">
-                                    🎮 Comenzar Juego
-                                </a>
-                            </div>
-
-                            <!-- SI EXISTEN PUNTUACIONES -->
-                            <div th:unless="${#lists.isEmpty(topScores)}" class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead class="table-dark">
-                                    <tr>
-                                        <th>Pos.</th>
-                                        <th>🏅 Jugador</th>
-                                        <th>⭐ Puntos</th>
-                                        <th>📊 Nivel</th>
-                                        <th>🔥 Mejor Racha</th>
-                                        <th>🎯 Precisión</th>
-                                        <th>📅 Fecha</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="session, iterStat : ${topScores}"
-                                        th:class="${iterStat.index == 0} ? 'table-warning' :
-                                                  (${iterStat.index == 1} ? 'table-secondary' :
-                                                  (${iterStat.index == 2} ? 'table-info' : ''))">
-                                        <td>
-                                            <span th:if="${iterStat.index == 0}" class="badge bg-warning text-dark fs-6">🥇</span>
-                                            <span th:if="${iterStat.index == 1}" class="badge bg-secondary fs-6">🥈</span>
-                                            <span th:if="${iterStat.index == 2}" class="badge bg-info fs-6">🥉</span>
-                                            <span th:unless="${iterStat.index < 3}" th:text="${iterStat.index + 1}"></span>
-                                        </td>
-                                        <td><strong th:text="${session.playerName}">Jugador</strong></td>
-                                        <td><span class="badge bg-success fs-6" th:text="${session.score}">0</span></td>
-                                        <td th:text="${session.levelReached}">1</td>
-                                        <td th:text="${session.bestStreak}">0</td>
-                                        <td>
-                                            <span th:text="${#numbers.formatDecimal(session.accuracyPercentage, 1, 1)} + '%'">0%</span>
-                                        </td>
-                                        <td>
-                                            <small th:text="${#temporals.format(session.sessionStart, 'dd/MM/yyyy HH:mm')}">Fecha</small>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- RESUMEN -->
-                            <div class="row mt-4">
-                                <div class="col-md-6">
-                                    <div class="card bg-light">
-                                        <div class="card-body text-center">
-                                            <h6 class="text-muted">🎯 Puntuación Promedio</h6>
-                                            <!-- ⚠️ CORREGIDO: Thymeleaf no soporta directamente .stream() -->
-                                            <h4 class="text-primary"
-                                                th:text="${#lists.isEmpty(topScores) ? '0' : #numbers.formatDecimal(#aggregates.avg(topScores.^score), 1, 0)}">
-                                                0
-                                            </h4>
+                        <!-- Full Leaderboard Table -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">🏅 Jugador</th>
+                                    <th scope="col">⭐ Puntos</th>
+                                    <th scope="col">📊 Nivel</th>
+                                    <th scope="col">🔥 Mejor Racha</th>
+                                    <th scope="col">🎯 Precisión</th>
+                                    <th scope="col">📅 Fecha</th>
+                                    <th scope="col">⚡ Estado</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="session, iterStat : ${topScores}"
+                                    th:class="${iterStat.index == 0} ? 'table-warning champion-row' : (${iterStat.index == 1} ? 'table-light' : (${iterStat.index == 2} ? 'table-info' : ''))"
+                                    class="leaderboard-row">
+                                    <td class="position-cell">
+                                        <span th:if="${iterStat.index == 0}" class="badge bg-warning text-dark fs-6">🥇 1</span>
+                                        <span th:if="${iterStat.index == 1}" class="badge bg-secondary fs-6">🥈 2</span>
+                                        <span th:if="${iterStat.index == 2}" class="badge bg-info fs-6">🥉 3</span>
+                                        <span th:unless="${iterStat.index < 3}" class="position-number" th:text="${iterStat.index + 1}">4</span>
+                                    </td>
+                                    <td>
+                                        <div class="player-info">
+                                            <strong th:text="${session.playerName}">Jugador</strong>
+                                            <div th:if="${iterStat.index == 0}" class="text-warning">
+                                                <small>👑 Actual Campeón</small>
+                                            </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success fs-6" th:text="${session.score}">0</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary" th:text="${session.levelReached}">1</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning text-dark" th:text="${session.bestStreak}">0</span>
+                                    </td>
+                                    <td>
+                                        <div class="accuracy-display">
+                                                <span th:class="${session.accuracyPercentage >= 90 ? 'text-success fw-bold' : (session.accuracyPercentage >= 75 ? 'text-warning fw-bold' : 'text-danger')}"
+                                                      th:text="${#numbers.formatDecimal(session.accuracyPercentage, 1, 1)} + '%'">0%</span>
+                                            <div class="progress mt-1" style="height: 4px;">
+                                                <div class="progress-bar"
+                                                     th:class="${session.accuracyPercentage >= 90 ? 'bg-success' : (session.accuracyPercentage >= 75 ? 'bg-warning' : 'bg-danger')}"
+                                                     th:style="'width: ' + ${session.accuracyPercentage} + '%'"
+                                                     role="progressbar"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <small th:text="${#temporals.format(session.sessionStart, 'dd/MM/yyyy')}">
+                                            Fecha
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <span th:if="${session.livesRemaining > 0}" class="badge bg-success">✅ Completado</span>
+                                        <span th:unless="${session.livesRemaining > 0}" class="badge bg-danger">💀 Game Over</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Statistics Summary -->
+                        <div class="row mt-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <div class="stat-icon text-primary">🎯</div>
+                                        <h6 class="text-muted mb-1">Puntuación Promedio</h6>
+                                        <h4 class="text-primary" th:text="${leaderboardStats.averageScore}">0</h4>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="card bg-light">
-                                        <div class="card-body text-center">
-                                            <h6 class="text-muted">👑 Mejor Puntuación</h6>
-                                            <h4 class="text-warning"
-                                                th:text="${#lists.isEmpty(topScores) ? '0' : topScores[0].score}">
-                                                0
-                                            </h4>
-                                        </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <div class="stat-icon text-warning">👑</div>
+                                        <h6 class="text-muted mb-1">Mejor Puntuación</h6>
+                                        <h4 class="text-warning" th:text="${topScores[0].score}">0</h4>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <div class="stat-icon text-info">👥</div>
+                                        <h6 class="text-muted mb-1">Total Jugadores</h6>
+                                        <h4 class="text-info" th:text="${leaderboardStats.totalPlayers}">0</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                            <!-- BOTONES -->
-                            <div class="d-grid gap-2 mt-4">
-                                <a th:href="@{/game/start}" class="btn btn-primary btn-lg">
+                        <!-- Achievement Highlights -->
+                        <div class="achievements-section mt-4" th:if="${topScores[0].score >= 1000}">
+                            <div class="alert alert-warning" role="alert">
+                                <h6 class="alert-heading">🏆 Logros Destacados</h6>
+                                <ul class="mb-0">
+                                    <li th:if="${topScores[0].score >= 1000}">
+                                        <strong th:text="${topScores[0].playerName}">Campeón</strong> alcanzó más de 1000 puntos
+                                    </li>
+                                    <li th:if="${topScores[0].bestStreak >= 10}">
+                                        Racha impresionante de <span th:text="${topScores[0].bestStreak}">0</span> respuestas correctas
+                                    </li>
+                                    <li th:if="${topScores[0].accuracyPercentage >= 95}">
+                                        Precisión excepcional del <span th:text="${#numbers.formatDecimal(topScores[0].accuracyPercentage, 1, 1)}">0</span>%
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Challenge Section -->
+                        <div class="challenge-section mt-4">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">🎯 ¿Puedes superar al campeón?</h6>
+                                    <p class="card-text">
+                                        El récord actual es de <strong th:text="${topScores[0].score}">0</strong> puntos
+                                        establecido por <strong th:text="${topScores[0].playerName}">Campeón</strong>
+                                    </p>
+                                    <a th:href="@{/game/start}" class="btn btn-primary">
+                                        🚀 ¡Acepto el Desafío!
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Actions -->
+                    <div class="d-grid gap-2 mt-4">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <a th:href="@{/game/start}" class="btn btn-primary w-100">
                                     🎮 Jugar Ahora
                                 </a>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a th:href="@{/history}" class="btn btn-info w-100">
-                                            📊 Ver Historial
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a th:href="@{/}" class="btn btn-outline-secondary w-100">
-                                            🏠 Inicio
-                                        </a>
-                                    </div>
-                                </div>
                             </div>
-
-                        </div> <!-- /card-body -->
-                    </div> <!-- /card -->
+                            <div class="col-md-4 mb-2">
+                                <a th:href="@{/history}" class="btn btn-info w-100">
+                                    📊 Ver Historial
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <a th:href="@{/}" class="btn btn-outline-secondary w-100">
+                                    🏠 Inicio
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Share Achievement Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">🏆 Compartir Logro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>¡Comparte tu posición en el leaderboard!</p>
+                <textarea class="form-control" id="shareText" rows="4" readonly></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="copyToClipboard()">📋 Copiar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/game.js}"></script>
+<script>
+    // Podium entrance animations
+    window.addEventListener('load', function() {
+        const podiumCards = document.querySelectorAll('.podium-card');
+        podiumCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease-out';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 200 * (index + 1));
+        });
+
+        // Table row animations
+        const rows = document.querySelectorAll('.leaderboard-row');
+        rows.forEach((row, index) => {
+            if (index > 2) { // Skip top 3 as they're in podium
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-20px)';
+
+                setTimeout(() => {
+                    row.style.transition = 'all 0.4s ease-out';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, 100 * (index - 2));
+            }
+        });
+    });
+
+    // Row hover effects
+    document.querySelectorAll('.leaderboard-row').forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.02)';
+            this.style.transition = 'transform 0.2s ease';
+            this.style.zIndex = '1';
+        });
+
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.zIndex = 'auto';
+        });
+    });
+
+    // Share functionality for champion
+    function shareAchievement(position, playerName, score) {
+        const medals = ['🥇', '🥈', '🥉'];
+        const medal = position <= 3 ? medals[position - 1] : position;
+
+        const shareText = `${medal} ¡Estoy en el puesto ${position} del Juego de Escrituras LDS!
+
+👤 Jugador: ${playerName}
+⭐ Puntuación: ${score} puntos
+🏆 Posición: #${position}
+
+¡Ven a desafiarme! 📚✨`;
+
+        document.getElementById('shareText').value = shareText;
+        const shareModal = new bootstrap.Modal(document.getElementById('shareModal'));
+        shareModal.show();
+    }
+
+    function copyToClipboard() {
+        const shareText = document.getElementById('shareText');
+        shareText.select();
+        shareText.setSelectionRange(0, 99999);
+
+        try {
+            document.execCommand('copy');
+
+            const copyBtn = event.target;
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '✅ ¡Copiado!';
+            copyBtn.disabled = true;
+
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.disabled = false;
+            }, 2000);
+
+        } catch (err) {
+            alert('Error al copiar al portapapeles');
+        }
+    }
+
+    // Click on champion row to share
+    document.querySelector('.champion-row')?.addEventListener('click', function() {
+        const playerName = this.cells[1].textContent.trim();
+        const score = this.cells[2].textContent.trim();
+        shareAchievement(1, playerName, score);
+    });
+
+    // Refresh leaderboard every 30 seconds (optional)
+    setInterval(function() {
+        // Only refresh if page is visible
+        if (!document.hidden) {
+            location.reload();
+        }
+    }, 30000);
+</script>
 </body>
 </html>
