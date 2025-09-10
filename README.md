@@ -241,7 +241,7 @@ Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detal
 ## 📞 Contacto
 
 - **Autor**: Jose Luis
-- **Email**: josejlc@gmail.com
+- **Email**: josejlc@outlook.com
 - **GitHub**: https://github.com/josejlc
 - **LinkedIn**: https://www.linkedin.com/in/josecajahuanca
 
