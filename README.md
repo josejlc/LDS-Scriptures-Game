@@ -241,9 +241,9 @@ Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detal
 ## 📞 Contacto
 
 - **Autor**: Tu Nombre
-- **Email**: tu.email@ejemplo.com
-- **GitHub**: [@tuusuario](https://github.com/josejlc)
-- **LinkedIn**: [Tu Perfil](https://www.linkedin.com/in/josecajahuanca/)
+- **Email**: josejlc@gmail.com
+- **GitHub**: https://github.com/josejlc
+- **LinkedIn**: https://www.linkedin.com/in/josecajahuanca
 
 ---
 
