@@ -3,90 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de las Escrituras LDS</title>
+    <title>Configurar Juego - Dominio de Doctrina LDS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link th:href="@{/css/game.css}" rel="stylesheet">
-    <meta name="description" content="Juego interactivo de escrituras LDS para seminario">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link th:href="@{/css/game.css}" rel="stylesheet"> <!-- ACTUALIZADO: Ruta correcta para CSS -->
+    <meta name="description" content="Configuración inicial para el juego de escrituras LDS - Seminario">
 </head>
 <body class="bg-gradient">
-<div class="container-fluid min-vh-100 d-flex align-items-center">
+<div class="container-fluid min-vh-100 d-flex align-items-center py-4">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
+            <div class="col-md-10 col-lg-8">
                 <div class="card shadow-lg game-card">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h2 class="mb-0">📚 Juego de las Escrituras</h2>
-                        <p class="mb-0 mt-1">Seminario LDS</p>
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h2 class="mb-1">📚 Dominio de Doctrina</h2>
+                        <p class="mb-0 opacity-75">Juego de Escrituras - Seminario LDS</p>
                     </div>
+
                     <div class="card-body p-4">
-                        <h4 class="text-center mb-4">Configura tu perfil</h4>
-
-                        <form action="/game/start" method="post" id="startGameForm" novalidate>
-                            <div class="mb-3">
-                                <label for="playerName" class="form-label">
-                                    <i class="bi bi-person"></i> Tu Nombre *
-                                </label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="playerName"
-                                       name="playerName"
-                                       placeholder="Ingresa tu nombre completo"
-                                       maxlength="50"
-                                       required
-                                       aria-describedby="playerNameHelp">
-                                <div class="form-text" id="playerNameHelp">
-                                    Este nombre aparecerá en el leaderboard
-                                </div>
-                                <div class="invalid-feedback">
-                                    Por favor ingresa tu nombre
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="seminaryYear" class="form-label">
-                                    <i class="bi bi-calendar"></i> Año de Seminario
-                                </label>
-                                <select class="form-select"
-                                        id="seminaryYear"
-                                        name="seminaryYear"
-                                        required
-                                        aria-describedby="seminaryYearHelp">
-                                    <option value="">Selecciona tu año</option>
-                                    <option value="S1">S1 - Primer año (14 años)</option>
-                                    <option value="S2">S2 - Segundo año (15 años)</option>
-                                    <option value="S3">S3 - Tercer año (16 años)</option>
-                                    <option value="S4">S4 - Cuarto año (17 años)</option>
-                                </select>
-                                <div class="form-text" id="seminaryYearHelp">
-                                    Selecciona tu año actual de seminario
-                                </div>
-                                <div class="invalid-feedback">
-                                    Por favor selecciona tu año de seminario
-                                </div>
-                            </div>
-
-                            <div class="d-grid gap-2">
-                                <button type="submit"
-                                        class="btn btn-primary btn-lg"
-                                        id="startBtn">
-                                    🚀 Empezar el Juego
+                        <!-- Tabs Navigation -->
+                        <ul class="nav nav-tabs nav-justified mb-4" id="gameTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">
+                                    <i class="bi bi-person-circle"></i> Perfil
                                 </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">
+                                    <i class="bi bi-gear"></i> Opciones de Juego
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="gameTabsContent">
+                            <!-- Profile Tab -->
+                            <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <form th:action="@{/game/start}" method="post" id="gameConfigForm" novalidate>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="playerName" class="form-label">
+                                                    <i class="bi bi-person feature-icon"></i>Tu Nombre *
+                                                </label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="playerName"
+                                                       name="playerName"
+                                                       placeholder="Ingresa tu nombre completo"
+                                                       maxlength="50"
+                                                       required
+                                                       aria-describedby="playerNameHelp">
+                                                <div class="form-text" id="playerNameHelp">
+                                                    Tu nombre aparecerá en el leaderboard y historial
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Por favor ingresa tu nombre (2-50 caracteres)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="seminaryYear" class="form-label">
+                                                    <i class="bi bi-calendar feature-icon"></i>Año de Seminario
+                                                </label>
+                                                <select class="form-select"
+                                                        id="seminaryYear"
+                                                        name="seminaryYear"
+                                                        required
+                                                        aria-describedby="seminaryYearHelp">
+                                                    <option value="">Selecciona tu año</option>
+                                                    <option value="S1">S1 - Primer año (14 años)</option>
+                                                    <option value="S2">S2 - Segundo año (15 años)</option>
+                                                    <option value="S3">S3 - Tercer año (16 años)</option>
+                                                    <option value="S4">S4 - Cuarto año (17 años)</option>
+                                                </select>
+                                                <div class="form-text" id="seminaryYearHelp">
+                                                    Selecciona tu año actual de seminario
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Por favor selecciona tu año de seminario
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid gap-2 mt-4">
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="tab" data-bs-target="#settings" role="tab">
+                                            Siguiente: Configuración <i class="bi bi-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+
+                            <!-- Settings Tab -->
+                            <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                                <form th:action="@{/game/start}" method="post" id="gameConfigForm" novalidate>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-4" th:if="${books}">
+                                                <label for="bookType" class="form-label">
+                                                    <i class="bi bi-book feature-icon"></i>Libro de Escrituras *
+                                                </label>
+                                                <select class="form-select"
+                                                        id="bookType"
+                                                        name="bookType"
+                                                        required
+                                                        aria-describedby="bookTypeHelp">
+                                                    <option value="">Selecciona un libro...</option>
+                                                    <option th:each="book : ${books}"
+                                                            th:value="${book.code}"
+                                                            th:text="${book.name}"
+                                                            th:data-description="${book.description}">Libro</option>
+                                                </select>
+                                                <div class="form-text" id="bookTypeHelp">
+                                                    Elige el libro de escrituras para tu sesión de estudio
+                                                </div>
+                                                <div class="invalid-feedback">
+                                                    Por favor selecciona un libro de escrituras
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-4" th:if="${difficultyLevels}">
+                                                <label for="difficulty" class="form-label">
+                                                    <i class="bi bi-speedometer2 feature-icon"></i>Nivel de Dificultad
+                                                </label>
+                                                <select class="form-select" id="difficulty" name="difficulty">
+                                                    <option value="EASY" selected>🟢 Fácil - Preguntas básicas</option>
+                                                    <option value="MEDIUM">🟡 Intermedio - Preguntas moderadas</option>
+                                                    <option value="HARD">🔴 Difícil - Preguntas avanzadas</option>
+                                                </select>
+                                                <div class="form-text">
+                                                    Puedes cambiar la dificultad en cualquier momento
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4" th:if="${gameModes}">
+                                        <label class="form-label">
+                                            <i class="bi bi-controller feature-icon"></i>Modo de Juego
+                                        </label>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-check card p-3 h-100">
+                                                    <input class="form-check-input" type="radio" name="gameMode"
+                                                           id="modeClassic" value="CLASSIC" checked>
+                                                    <label class="form-check-label" for="modeClassic">
+                                                        <strong>🎯 Clásico</strong><br>
+                                                        <small class="text-muted">Preguntas de opción múltiple tradicionales</small>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-2" th:if="${gameModes.contains('SCRIPTURE_MASTERY')}">
+                                                <div class="form-check card p-3 h-100">
+                                                    <input class="form-check-input" type="radio" name="gameMode"
+                                                           id="modeScripture" value="SCRIPTURE_MASTERY">
+                                                    <label class="form-check-label" for="modeScripture">
+                                                        <strong>📜 Dominio de Escrituras</strong><br>
+                                                        <small class="text-muted">Enfoque en versículos de dominio</small>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid gap-2 d-md-flex mt-4">
+                                        <button type="button" class="btn btn-outline-secondary me-md-2" data-bs-toggle="tab" data-bs-target="#profile" role="tab">
+                                            <i class="bi bi-arrow-left me-2"></i>Anterior
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-success btn-lg flex-grow-1"
+                                                id="startGameBtn">
+                                            🚀 Comenzar Desafío
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 
                         <!-- Navigation Links -->
                         <div class="row mt-4">
-                            <div class="col-6">
-                                <a th:href="@{/leaderboard}"
-                                   class="btn btn-outline-warning w-100">
-                                    🏆 Puntuaciones
+                            <div class="col-6 col-md-3 mb-2">
+                                <a th:href="@{/}" class="btn btn-outline-secondary w-100 nav-btn">
+                                    <i class="bi bi-house me-1"></i> Inicio
                                 </a>
                             </div>
-                            <div class="col-6">
-                                <a th:href="@{/history}"
-                                   class="btn btn-outline-info w-100">
-                                    📊 Historial
+                            <div class="col-6 col-md-3 mb-2">
+                                <a th:href="@{/leaderboard}" class="btn btn-outline-warning w-100 nav-btn">
+                                    <i class="bi bi-trophy me-1"></i> Puntuaciones
                                 </a>
+                            </div>
+                            <div class="col-6 col-md-3 mb-2">
+                                <a th:href="@{/history}" class="btn btn-outline-info w-100 nav-btn">
+                                    <i class="bi bi-clock-history me-1"></i> Historial
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3 mb-2">
+                                <a href="#" class="btn btn-outline-dark w-100 nav-btn" data-bs-toggle="modal" data-bs-target="#helpModal">
+                                    <i class="bi bi-question-circle me-1"></i> Ayuda
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Card (if available) -->
+                <div class="row mt-4" th:if="${playerStats}">
+                    <div class="col-12">
+                        <div class="card stats-card shadow-sm">
+                            <div class="card-body py-3">
+                                <h6 class="card-title mb-3 text-center">📈 Tus Estadísticas</h6>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <h5 class="text-primary mb-0" th:text="${playerStats.totalGames}">0</h5>
+                                        <small class="text-muted">Juegos</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <h5 class="text-success mb-0" th:text="${playerStats.bestScore}">0</h5>
+                                        <small class="text-muted">Mejor Score</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <h5 class="text-warning mb-0" th:text="${#numbers.formatDecimal(playerStats.averageAccuracy, 1, 0)} + '%'">0%</h5>
+                                        <small class="text-muted">Precisión</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -96,23 +238,46 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/game.js}"></script>
-<script>
-    // Form validation
-    document.getElementById('startGameForm').addEventListener('submit', function(event) {
-        if (!this.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        this.classList.add('was-validated');
-    });
+<!-- Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">🆕 ¿Cómo jugar?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Dominio de Doctrina</strong> es un juego interactivo para aprender las escrituras.</p>
+                <ol>
+                    <li>Completa tu perfil con nombre y año de seminario</li>
+                    <li>Selecciona el libro de escrituras y nivel de dificultad</li>
+                    <li>Elige el modo de juego que prefieras</li>
+                    <li>¡Responde preguntas y gana puntos!</li>
+                </ol>
+                <p class="mb-0">Tu progreso se guardará para que puedas ver tus estadísticas y compararte con otros.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    // Add loading state to button
-    document.getElementById('startBtn').addEventListener('click', function() {
-        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Iniciando...';
-        this.disabled = true;
-    });
-</script>
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Configurando juego...</span>
+                </div>
+                <p class="mb-0">Preparando tu juego...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/game.js}"></script> <!-- ACTUALIZADO: Ruta correcta para JS -->
 </body>
 </html>
