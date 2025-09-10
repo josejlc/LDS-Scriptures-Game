@@ -240,7 +240,7 @@ Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detal
 
 ## 📞 Contacto
 
-- **Autor**: Tu Nombre
+- **Autor**: Jose Luis
 - **Email**: josejlc@gmail.com
 - **GitHub**: https://github.com/josejlc
 - **LinkedIn**: https://www.linkedin.com/in/josecajahuanca
